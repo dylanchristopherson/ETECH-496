@@ -1,8 +1,6 @@
 % This piece of code represents a bot that is traveling from a start
 % location to a goal location using Dijkstra's Algorithm. The bot can head
-% up, down, left, right, or diagonally
-
-
+% up, down, left, right
 clear all; close all; clc;
 
 %% System parameters
@@ -69,6 +67,11 @@ PARENT=zeros(Nx,Ny);
 is=xs/dx; js=ys/dy % (i,j) of start location
 CTG(is,js)=0;
 LN=[NodeID(is,js)]; % list of leaf nodes
+BOT_STEPS=[-1 0; 1 0;0 -1; 0 1]; % -1 0 = one step in -i direction,
+                                   % +1 0 = one step in +i direction,
+                                   % 0 -1 = one step in -j direction,
+                                   % 0 +1 = one step in +j direction,
+Nsteps=4; % number of steps (rows) in BOT_STEPS
 
 while ~isempty(LN)
     LLN=length(LN); % number of entries in LN array
@@ -92,8 +95,11 @@ while ~isempty(LN)
     %% Expand the minimum cost node
     inex=Nodei(nex); jnex=Nodej(nex); % (i,j) of the node to be expanded
     VISIT(inex,jnex)=1; % node nex is nvisited/sxpanded now [NEW]
-    for i1=inex-1:inex+1
-        for j1=jnex-1:jnex+1
+    %for i1=inex-1:inex+1
+        %for j1=jnex-1:jnex+1
+    for n=1:Nsteps
+        i1=inex+BOT_STEPS(n,1); % i of next cell (after taking nth step from BOT_STEPS)
+        j1=jnex+BOT_STEPS(n,2); % j of next cell (after taking nth step from BOT_STEPS)
             if i1>=1 && i1 <=Nx && j1>=1 && j1<=Ny % check if node (i1,j1) is in domain 1 to Nx
             if ~(i1==inex && j1==jnex) % not the nex node
                     if Z(i1,j1)==0 && VISIT(i1,j1)==0 % node is free
@@ -111,8 +117,7 @@ while ~isempty(LN)
                     end
             end
             end
-        end
-    end    
+    end
 end
 
 %% Extract trajectory from Start (xs, ys) to 
