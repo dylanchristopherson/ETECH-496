@@ -4,8 +4,7 @@ clear all; close all; clc;
 %% System parameters
 L=20; W=15; % L x W field
 
-%% xs=1; ys=1; % Start location {xs,ys}
-xs=11; ys=5; % Start location {xs,ys}
+xs=1; ys=1; % Start location {xs,ys}
 xg=10; yg=13; % Goal location {xg,yg}
 
 L1=3; W1=7; x1=4; y1=4; % Obstacle 1
@@ -112,22 +111,11 @@ while ~isempty(LN)
 end
 
 %% Extract trajectory from Start (xs, ys) to 
-xg=3; yg=10; % Goal location (xg,yg)
-ig=xg/dx; jg=yg/dy; % (i,j) of (xg,yg)
-np = PARENT(ig,jg); % parent node of (ig,jg);
-ns = NodeID(is,js); % node id of (is,js) or Start location
+xg=10; yg=13; % Goal location (xg,yg)
+ig=xq/dx; jg=yg/dy; % (i,j) of (xg,yg)
+np = PARENT(ig,jg); % parent node of (ig,jg)
+ns = NodeID(is,js);
 Traj = [xg yg];
-while np~=ns % backtrack all the way to start node
-    ip=Nodei(np);jp=Nodej(np); % (i,j) of node np
-    x=X(ip,jp); y=Y(ip,jp); % (x,y) of node np
-    Traj=[x y; Traj]; % add (x,y) to trajectory
-    np=PARENT(ip,jp); % parent node of (ip,jp)
-end
-
-figure(1); hold on; % continue figure 1
-plot(Traj(:,1),Traj(:,2),'g','LineWidth',2);
-plot(xg,yg,'mo','LineWidth',3);text(xg,yg,'Goal','color','m');
-plot(xs,ys,'mo','LineWidth',3);text(xs,ys,'Start','color','r');
 
 %% Computer optimal cost to go to any node (i,j) from the start node
 % Dijkstra's algorithm
