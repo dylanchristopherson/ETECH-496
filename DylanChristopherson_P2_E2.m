@@ -1,12 +1,12 @@
 close all; clear all; clc;
 
 %% Paramteres of UAV
-m=1.5; % mass (kg)
+m=1.2; % mass (kg)
 Ixx=0.5; % moment of intertia about body x-axis (Kg-m^2)
 Iyy=0.5; % moment of inertia about boyd y-axis (Kg-m^2)
 Izz=1; % moment of inertia about body z-axis (Kg-mY2)
 IUAV=[Ixx 0 0 ; 0 Iyy 0 ; 0 0 Izz]; % Inertia matrix
-k=0.0002; % thrust coefficient of each motor
+k=0.0005; % thrust coefficient of each motor
 b=0.0001; % antitorque coefficient of each motor
 IM=0.001; % moment of inertia of motor about its central axis (Kg/m^3)
 Lx=0.2; % distance of motors fromx-axis (m)
@@ -14,9 +14,9 @@ Ly=0.2; % distance of motors from y-axis (m)
 g=9.8; % gravity (m/s^2)
 
 %% UAV state at t=0
-x=0;y=0;z=0; % (m): x, y, and z in global frame
+x=1;y=0;z=1; % (m): x, y, and z in global frame
 vx=0;vy=0;vz=0; % (m/s): first time-derivatives of x, y, and z in global frame
-phi=30*pi/180;theta=0;psi=0; % (rad): roll, pitch, and yaw angles in global frame
+phi=0;theta=0;psi=0; % (rad): roll, pitch, and yaw angles in global frame
 phid=0;thetad=0;psid=0; % (rad/2): first time-derivatives of roll, pitch, and yaw angles in global frame
 wx=0;wy=0;wz=0; % (rad/s): roll rate (p), pitch rate (q), and yaw rate (r) in body frame
 
@@ -35,15 +35,10 @@ atdtraj(1,1)=phi;atdtraj(1,2)=theta;atdtraj(1,3)=psi; % orientation at t=0 (time
 veltraj(1,1)=0;veltraj(1,2)=0;veltraj(1,3)=0; % velocity at t=0
 
 %% Control Inputs
-wm=sqrt(m*g/(4*k)) % value of motor speeds to hover (total thrust F = m*g)
+wm=sqrt(m*g/(4*k)); % value of motor speeds to hover (total thrust F = m*g)
 WM=[wm wm wm wm]; % RPMs of motors 1,2,3,4 to hover
 WMtraj=zeros(Nt,4); % motors RPMs time-trajectory
 WMtraj(1,1)=WM(1); WMtraj(1,2)=WM(2);WMtraj(1,3)=WM(3);WMtraj(1,4)=WM(4); % motors RPMs at t=0 (time-step # 1)
-
-wm2=140
-wm3=130
-wm4=sqrt(m*g/(2*k))-140
-
 
 %% Quadcopter dynamics simulation (compute UAV state at t+dt using the UAV state and controls at t)
 nt=1; % time-step 1 (t=0)
@@ -146,30 +141,30 @@ while nt<Nt
      
     % WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
     % WMtraj(nt,1)=WM(1);WMtraj(nt,2)=WM(2);WMtraj(nt,3)=WM(3);WMtraj(nt,4)=WM(4);
-%      
-%     if timtraj(nt)>=0 && timtraj(nt)<0.2
-%         WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
-%     elseif timtraj(nt)>=0.2 && timtraj(nt)<0.4
-%         WM(1)=wm+5;WM(2)=wm+5;WM(3)=wm;WM(4)=wm;
-%     elseif timtraj(nt)>=0.4 && timtraj(nt)<0.6
-%         WM(1)=wm;WM(2)=wm;WM(3)=wm+5;WM(4)=wm+5;
-%     elseif timtraj(nt)>=0.6 && timtraj(nt)<1.2
-%         WM(1)=wm-1;WM(2)=wm-1;WM(3)=wm-1;WM(4)=wm-1;
-%     elseif timtraj(nt)>=1.2 && timtraj(nt)<1.4
-%         WM(1)=wm+5;WM(2)=wm;WM(3)=wm;WM(4)=wm+5;
-%     elseif timtraj(nt)>=1.4 && timtraj(nt)<1.6
-%         WM(1)=wm;WM(2)=wm+5;WM(3)=wm+5;WM(4)=wm;
-%     elseif timtraj(nt)>=1.6 && timtraj(nt)<2.2
-%         WM(1)=wm-1;WM(2)=wm-1;WM(3)=wm-1;WM(4)=wm-1;
-%     elseif timtraj(nt)>=2.2 && timtraj(nt)<2.4
-%         WM(1)=wm;WM(2)=wm+5;WM(3)=wm;WM(4)=wm;
-%     elseif timtraj(nt)>=2.4 && timtraj(nt)<2.6
-%         WM(1)=wm-1;WM(2)=wm-1;WM(3)=wm-1;WM(4)=wm-1;
-%     elseif timtraj(nt)>=2.6 && timtraj(nt)<3.0
-%         WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
-%     else
-%         WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
-%     end
+     
+    if timtraj(nt)>=0 && timtraj(nt)<0.2
+        WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
+    elseif timtraj(nt)>=0.2 && timtraj(nt)<0.4
+        WM(1)=wm+5;WM(2)=wm+5;WM(3)=wm;WM(4)=wm;
+    elseif timtraj(nt)>=0.4 && timtraj(nt)<0.6
+        WM(1)=wm;WM(2)=wm;WM(3)=wm+5;WM(4)=wm+5;
+    elseif timtraj(nt)>=0.6 && timtraj(nt)<1.2
+        WM(1)=wm-1;WM(2)=wm-1;WM(3)=wm-1;WM(4)=wm-1;
+    elseif timtraj(nt)>=1.2 && timtraj(nt)<1.4
+        WM(1)=wm+5;WM(2)=wm;WM(3)=wm;WM(4)=wm+5;
+    elseif timtraj(nt)>=1.4 && timtraj(nt)<1.6
+        WM(1)=wm;WM(2)=wm+5;WM(3)=wm+5;WM(4)=wm;
+    elseif timtraj(nt)>=1.6 && timtraj(nt)<2.2
+        WM(1)=wm-1;WM(2)=wm-1;WM(3)=wm-1;WM(4)=wm-1;
+    elseif timtraj(nt)>=2.2 && timtraj(nt)<2.4
+        WM(1)=wm;WM(2)=wm+5;WM(3)=wm;WM(4)=wm;
+    elseif timtraj(nt)>=2.4 && timtraj(nt)<2.6
+        WM(1)=wm-1;WM(2)=wm-1;WM(3)=wm-1;WM(4)=wm-1;
+    elseif timtraj(nt)>=2.6 && timtraj(nt)<3.0
+        WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
+    else
+        WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
+    end
     
  %    if timtraj(nt)>=0.5 && timtraj(nt)<=0.6
  %        WM(2)=wm+20;WM(3)=wm+20; % pitching forward about yb-axis
@@ -178,11 +173,9 @@ while nt<Nt
  %    else
  %        WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
  %    end
-    %WM(1)=wm;WM(2)=wm;WM(3)=wm;WM(4)=wm;
-    WM(1)=wm2;WM(2)=wm2;WM(3)=wm3;WM(4)=wm3;
-    % WM(1)=135.6;WM(2)=135.6;WM(3)=135.6;WM(4)=135.6; % Hovering
-    %WM(1)=140;WM(2)=140;WM(3)=131.108;WM(4)=131.108;
-    WMtraj(nt,1)=WM(1);WMtraj(nt,2)=WM(2);WMtraj(nt,3)=WM(3);WMtraj(nt,4)=WM(4);
+  
+
+     WMtraj(nt,1)=WM(1);WMtraj(nt,2)=WM(2);WMtraj(nt,3)=WM(3);WMtraj(nt,4)=WM(4);
 end
      
 %% plot 3-D trajectory x,y,z
